@@ -1,0 +1,41 @@
+---
+layout: default
+---
+<div class="page-header">
+  <h3 class="post-title">{{ page.title }}</h3>
+  <span class="post-date">{{ page.date | date_to_string }}</span>
+</div>
+
+<div class="row">
+  <div class="col-sm-9">
+    <div class="post-content">
+      {{ content }}
+    </div>
+  </div>
+  <div class="col-sm-3">
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">
+                  CONTACT
+              </h3>
+          </div>
+          <div class="panel-body">
+              <a href="https://github.com/dengliangshi" target="_blank"><img src="/images/github.png" class="img-rounded"></a>
+              <a href="https://www.researchgate.net/profile/Dengliang_Shi" target="_blank"><img src="/images/researchgate.png" class="img-rounded"></a>
+              <img src="/images/linkin.png" class="img-rounded">
+          </div>
+      </div>
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">RELATED POSTS</h3>
+          </div>
+          <ul class="list-group">
+              {% for post in site.related_posts limit:3 %}
+              <li class="list-group-item">
+                  <a href="{{ post.url }}">{{ post.title }}</a>
+              </li>
+              {% endfor %}
+          </ul>
+      </div>
+  </div>
+</div>

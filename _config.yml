@@ -1,0 +1,15 @@
+# Gems
+gems: [
+  "jekyll-paginate",
+  "jekyll/scholar"
+]
+
+# setting for jekyll-paginate
+paginate: 5
+
+# setting for jekyll-scholar
+scholar:
+  style: apa
+
+# exclude files
+exclude: ["README.md"]

@@ -1,0 +1,73 @@
+---
+layout: default
+title: Home
+---
+
+<div class="page-header">
+  <h2>D. SHI</h2>
+  <h4 class="sub-title">Artificial Intelligent, Natural Language Processing, Neural Network Language Model</h4>
+</div>
+<div class="row">
+  <div class="col-sm-8">
+    <div class="posts">
+      {% for post in paginator.posts %}
+      <div class="post">
+        <h3 class="post-title">
+          <a href="{{ post.url }}">{{ post.title }}</a>
+        </h3>
+        <span class="post-date">{{ post.date | date_to_string }}</span>
+        <div class="post-content">
+          {{ post.abstract }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <ul class="pager">
+        <li class="previous">
+        {% if paginator.previous_page %}
+          {% if paginator.page == 2 %}
+              <a class="pagination-item older" href="/">&larr; Newer</a>
+          {% else %}
+              <a class="pagination-item older" href="/page{{paginator.previous_page}}">&larr; Newer</a>
+          {% endif %}
+        {% else %}
+            <span class="pagination-item older">&larr; Newer</span>
+        {% endif %}
+        </li>
+        <li class="next">
+        {% if paginator.next_page %}
+            <a class="pagination-item newer" href="/page{{paginator.next_page}}">Older &rarr;</a>
+        {% else %}
+            <span class="pagination-item newer">Older &rarr;</span>
+        {% endif %}
+        </li>
+    </ul>
+  </div>
+  <div class="col-sm-3 col-sm-offset-1">
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">
+                  CONTACT
+              </h3>
+          </div>
+          <div class="panel-body">
+              <a href="https://github.com/dengliangshi" target="_blank"><img src="/images/github.png" class="img-rounded"></a>
+              <a href="https://www.researchgate.net/profile/Dengliang_Shi" target="_blank"><img src="/images/researchgate.png" class="img-rounded"></a>
+              <img src="/images/linkin.png" class="img-rounded">
+          </div>
+      </div>
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">RECENT POSTS</h3>
+          </div>
+          <ul class="list-group">
+              {% for post in paginator.posts %}
+              <li class="list-group-item">
+                  <a href="{{ post.url }}">{{ post.title }}</a>
+              </li>
+              {% endfor %}
+          </ul>
+      </div>
+  </div>
+</div>
