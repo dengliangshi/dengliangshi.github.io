@@ -80,19 +80,19 @@ where, $$\theta$$ is the set of parameters of NNLMs, $$R(\theta)$$ is a regulari
 
 Cross entropy criterion is used
 
-$$L = \frac{1}{T}\sum_{i=1}^{T}\hat{o}log{o}$$
+$$L = \frac{1}{T}\sum_{i=1}^{T}\hat{o}\textrm{log}(o)$$
 
 For word $$w_t$$, the cross entropy is $$L_t = \hat{o}log{o}$$ and the except output $$\hat{o}$$ is 1 of $$V$$ vector, and only the  the gradient for the output of neural network is
 
-$$\frac{\partial{L_t}}{\partial{y_i}} = \frac{\partial{\hat{o}log{o}}}{\partial{y_i}} = 1 - o_i$$
+$$\frac{\partial{L_t}}{\partial{y_i}} = \frac{\partial{\hat{o}\textrm{log}(o)}}{\partial{y_i}} = 1 - o_i$$
 
-Stochastic gradient descent (SGD) method is a proper learning algorithm for training all NNLMs, and the gradients of errors for parameters $\theta$ are computed using backpropagation (BP) algorithm. For RNNLMs, backpropagation through time (BPTT) \citep{rumelhart_1986} should be used for better performance, and \citep{mikolov_2012} reported that error gradients were computed through 5 time steps is enough, at least for simple RNNLM on small corpus. The parameters of NNLMs are updated as:
+Stochastic gradient descent (SGD) method is a proper learning algorithm for training all NNLMs, and the gradients of errors for parameters $\theta$ are computed using backpropagation (BP) algorithm. For RNNLMs, backpropagation through time (BPTT) ([Rumelhart, 1986](http://www.iro.umontreal.ca/~vincentp/ift3390/lectures/backprop_old.pdf)) should be used for better performance, and [Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf) reported that error gradients were computed through 5 time steps is enough, at least for simple RNNLM on small corpus. The parameters of NNLMs are updated as:
 
 $$\theta = \theta + \alpha\frac{\partial{L}}{\partial{\theta}} - \beta\theta$$
 
 where, $$\alpha$$ is learning rate and $$\beta$$ is regularization parameter.
 
-As metioned above, two corpora are chosen for experiments in this paper, Brown corpus and One Billion Word Benchmark. They are all frequenctly used corpora for studies on language modeling and avaliable for everyone freely. Experimental setup for Brown corpus is the same as that in \citep{bengio_2003a}, the first 800000 words (ca01$$\sim$$cj54) were used for training, the following 200000 words (cj55$$\sim$$cm06) for validation and the rest (cn01$$\sim$$cr09) for testing.
+As metioned above, two corpora are chosen for experiments in this paper, Brown corpus and One Billion Word Benchmark. They are all frequenctly used corpora for studies on language modeling and avaliable for everyone freely. Experimental setup for Brown corpus is the same as that in [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), the first 800000 words (ca01$$\sim$$cj54) were used for training, the following 200000 words (cj55$$\sim$$cm06) for validation and the rest (cn01$$\sim$$cr09) for testing.
 
 ### 4. Evaluation
 The performance of neural network language models are usually measured by perflexity (PPL) which corresponds to the cross-entropy between the language model and test data. The perflexity of word sequence $$\textbf{w}=[w_0, w_1, ..., w_K]$$ is defined as:
