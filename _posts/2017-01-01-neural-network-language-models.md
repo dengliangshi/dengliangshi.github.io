@@ -10,9 +10,11 @@ Generally, well designed language model (LM) makes a critical difference in vari
 Although some previous attempts ([Miikkulainen and Dyer, 1991](http://ftp.cs.ucla.edu/tech-report/1990-reports/900001.pdf); [Schmidhuber, 1996](http://www.complexity.ru/papers/textcompression.pdf); [Xu and Rudnicky, 2000](http://isca-speech.org/archive/archive_papers/icslp_2000/i00_1202.pdf)), details on which are provided by [Schwenk (2007)](http://wiki.inf.ed.ac.uk/twiki/pub/CSTR/ListenSemester2_2009_10/sdarticle.pdf), have been made to apply artificial neural network into language modeling, neural network language modeling has attracted researches' attention only after [Bengio et al. (2001, 2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf). Neural network language models did not show prominent advantage over other language models until Mikolov investigates recurrent neural network for language modeling (Mikolov et al., [2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf); Mikolov, [2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf)). After more than a decade's research, there are numerous imporvements, marginal or critical, have been proposed over NNLMs.
 
 ### 2. Neural Network Language Models, NNLMs
-The goal of neural network language models are to learn the probability function of word sentences in a language, therefore they are also termed as neural probabilistic lanuage models or neural statistic lanuage models. The probability of a word sequence $$w_1w_2...w_k$$ can be represented by the production of the conditional probability of each word given all the previous ones:
+The goal of neural network language models are to learn the probability function of word sentences in a language, therefore they are also termed as neural probabilistic lanuage models or neural statistic lanuage models. The probability of a word sequence $w_1w_2...w_k$ can be represented by the production of the conditional probability of each word given all the previous ones:
 
-$$P\;=\;\prod^{k}_{t=1}P(w_t{\mid}w_1...w_{t-1})$$
+$$
+P\;=\;\prod^{k}_{t=1}P(w_t{\mid}w_1...w_{t-1})
+$$
 
 Statistic language models all take this chain rule as base. [Any Assumption?]
 
