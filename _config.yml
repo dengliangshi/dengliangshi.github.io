@@ -1,7 +1,6 @@
 markdown: kramdown
 kramdown:
   input: GFM
-  use_coderay: true
 
 # Gems
 gems: [

@@ -37,7 +37,7 @@ where $$y_i\;(i\;=\; 1, 2, ..., V)$$ is $i$th element of the ouput vecotor $$y$$
 
 <div style="text-align: center;">
 <img src="/images/nnlms/fnnlm.png">
-<p>Figure 2. Architecure of feed-forward nerual network language models</p>
+<p>Figure 1. Architecure of feed-forward nerual network language models</p>
 </div>
 
 #### 2.2 Recurrent Neural Network Language Model, RNNLM
@@ -106,11 +106,13 @@ Perflexity can be defined as the exponential of the average number of bits requi
 ### 5. Comparison of NNLMs with Different Architectures
 Comparision among diffrent types of NNLMs have already been made on both small corpus and large ones ([Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf); [Sundermeyer et al., 2013](https://core.ac.uk/download/pdf/36583567.pdf)). The results show that RNNLMs outperformed FNNLMs and the best performance is achieved using LSTM-RNNLMs. However, one or more optimization techniques are adopted for the NNLMs used in these comparision, which makes the result not suitable for further analysis. So the standard version of the three types of NNLMs are tested on Brown Corpus and One Billion Word Benchmark (OBWB) ([Chelba et al., 2014](http://m.isca-speech.org/archive/archive_papers/interspeech_2014/i14_2635.pdf)) here, and a class based speed-up technique is used and the algorithm, the detail about this technique will be discussed later. The reuslts are showed in Table 1 and will be used as the baseline in this paper.
 
-LM     | n |   m   | n_h     | Direct | Bias | Brown | OBWB 
--------|---|-------|---------|--------|------|-------|-------
-FNNLM  | 5 |  100  |   50    |   No   |  No  | 73.2  |  1
-RNNLM  | - |  100  |   50    |   No   |  No  | 73.2  |  2
-LSTMLM | - |  100  |   50    |   No   |  No  | 73.2  |  3
+<p style="text-align: center;">Table 1. Comparison of different NNLMs</p>
+
+LM     | $$n$$ | $$m$$ | $$n_h$$ | Direct | Bias | Brown  | OBWB 
+-------|:-----:|:-----:|:-------:|:------:|:----:|:------:|:-----:
+FNNLM  |   5   |  100  |   50    |   No   |  No  | 253.23 |  1
+RNNLM  |   -   |  100  |   50    |   No   |  No  | 73.2   |  2
+LSTMLM |   -   |  100  |   50    |   No   |  No  | 73.2   |  3
 
 The NNLMs performed in above experiments are all without direct connections from input layer to output layer and biases in both hidden and output layer. [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) suggests that better generalization and lower perplexity with no direct connections but longer training. A reasonable interpretation is that direct input-to-output connections provide a bit more capacity and faster learning of the "linear" part of mapping from word features to log-probabilities. On the other hand, without those connections the hidden units form a tight bottleneck which might force better generalization. For the biases, [Mikolov (2012)](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf) reported that no significant improvement of performance was gained with biases. So no direct connections and biases will be used in the following experiments neither.
 
