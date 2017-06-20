@@ -80,11 +80,11 @@ where, $$\theta$$ is the set of parameters of NNLMs, $$R(\theta)$$ is a regulari
 
 Cross entropy criterion is used
 
-$$L = \frac{1}{T}\sum_{i=1}^{T}o^{^}log{o}$$
+$$L = \frac{1}{T}\sum_{i=1}^{T}\hat{o}log{o}$$
 
-For word $$w_t$$, the cross entropy is $$L_t = o^{^}log{o}$$ and the except output $$o^{^}$$ is 1 of $$V$$ vector, and only the  the gradient for the output of neural network is
+For word $$w_t$$, the cross entropy is $$L_t = \hat{o}log{o}$$ and the except output $$\hat{o}$$ is 1 of $$V$$ vector, and only the  the gradient for the output of neural network is
 
-$$\frac{\partial{L_t}}{\partial{y_i}} = \frac{\partial{o^{^}log{o}}}{\partial{y_i}} = 1 - o_i$$
+$$\frac{\partial{L_t}}{\partial{y_i}} = \frac{\partial{\hat{o}log{o}}}{\partial{y_i}} = 1 - o_i$$
 
 Stochastic gradient descent (SGD) method is a proper learning algorithm for training all NNLMs, and the gradients of errors for parameters $\theta$ are computed using backpropagation (BP) algorithm. For RNNLMs, backpropagation through time (BPTT) \citep{rumelhart_1986} should be used for better performance, and \citep{mikolov_2012} reported that error gradients were computed through 5 time steps is enough, at least for simple RNNLM on small corpus. The parameters of NNLMs are updated as:
 
