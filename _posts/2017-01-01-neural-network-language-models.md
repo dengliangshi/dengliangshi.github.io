@@ -27,14 +27,14 @@ $$y\;=\;V\cdot{f(U\cdot{x}\;+b)}\;+\;M\cdot{x}\;+\;d$$
 
 Where, $$U\in\mathbb{R}^{n_h\times{n_i}}$$,  $$V\in\mathbb{R}^{n_o\times{n_h}}$$ are weight matrixes, $$n_h$$ is the number of nodes in hidden layer, $$n_o=V$$ is the size of output layer, weight matrix $$M\in\mathbb{R}^{n_o\times{n_i}}$$ is for the direct connection between input layer and output layer, $$b\in\mathbb{R}^{n_h}$$ and $$d\in\mathbb{R}^{n_o}$$ are biase vectors in hidden layer and output layer respectively, $$y\in\mathbb{R}^{n_o}$$ is the output vector, and $$f(\cdot)$$ is activation function.
 
-The $$i$$th element of output vector $$y$$ is the unnormalized probability $$P(w_i|w_{t-n+1}...w_{t-1})$$, where $$w_i$$ is the $$i$$th word in the vocabulaury. In order to guarantee all the output probailities are positive and summing to 1, a softmax layer is always adopted following the output layer of feedforward nerual network:
+The $$i$$th element of output vector $$y$$ is the unnormalized probability $$P(w_i{\mid}w_{t-n+1}...w_{t-1})$$, where $$w_i$$ is the $$i$$th word in the vocabulaury. In order to guarantee all the output probailities are positive and summing to 1, a softmax layer is always adopted following the output layer of feedforward nerual network:
 
 $$f(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{V}e^{y_j}}, i = 1, 2, ..., V$$
 
 where $$y_i\;(i\;=\; 1, 2, ..., V)$$ is $i$th element of the ouput vecotor $$y$$.
 
 <div style="text-align: center;">
-<img width="500" src="/images/nnlms/fnnlm.png">
+<img width="450" src="/images/nnlms/fnnlm.png">
 </div>
 
 #### 2.2 Recurrent Neural Network Language Model, RNNLM
