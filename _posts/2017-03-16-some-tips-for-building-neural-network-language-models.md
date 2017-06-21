@@ -17,7 +17,12 @@ As is well known, the goal of neural network language models is to learn the dis
 There are mainly two ways to define the minmum unit of a language , 
 
 ### 5. Unknown Words
-When neural network models are applied into language modeling, the computation is very expensive, in fact, it takes around one day to train nerual network language models even on a small corpus like Brown Corpus. One of the factors, which , is the size of vocabulary. 
+Unknown words, which is also called words out of vocabulary, is an unavoidable problem when building a language model, because it is impossible to  include all words of a language while training. 
+
+When neural network models are applied into language modeling, the computation is very expensive, in fact, it takes around one day to train nerual network language models even on a small corpus like Brown Corpus. One of the factors, which lead to the great computational burden of neural network language models, is the size of vocabulary. In order to reduce the calculated amount, not all the words from training set are added into pre-build vocabulary. The words out of vocabulary are all treated as unknown words and share one feature vector.
+
+After some speep-up techniques are proposaled, the size of vocabulary is not a problem any more and all words from training set are included in vocabulary. There is no unknown words during training. However, some words in validation set or test set may be not in the vocabulary and this always happens. The common way to deal with this problem is to assign a feature vector, whose elements are all zero, to those words out of vocabulary, and do not take those words into account when count the total number of words and the probability of word sequence (as showed in Figure 3).
+
 
 ### 6. Other
 using one dimension arrays for weight matrix will be much faster than using two dimension arrays.
