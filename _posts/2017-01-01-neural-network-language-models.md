@@ -108,7 +108,42 @@ $$PPL\;=\;\sqrt[K]{\prod^{K}_{i=0}\frac{1}{P(w_i|w_0...w_{i-1})}}\;=\;2^{-\frac{
 Perflexity can be defined as the exponential of the average number of bits required to encode the test data using a language model and lower perflexity indicates that the language model is closer to the true model which generates the test data.
 
 #### 5. COMPARISON OF NNLMS WITH DIFFERENT ARCHITECTURES
-Comparision among diffrent types of NNLMs have already been made on both small corpus and large ones ([Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf); [Sundermeyer et al., 2013](https://core.ac.uk/download/pdf/36583567.pdf)). The results show that RNNLMs outperformed FNNLMs and the best performance is achieved using LSTM-RNNLMs. However, one or more optimization techniques are adopted for the NNLMs used in these comparision, which makes the result not suitable for further analysis. So the standard version of the three types of NNLMs are tested on Brown Corpus and One Billion Word Benchmark (OBWB) ([Chelba et al., 2014](http://m.isca-speech.org/archive/archive_papers/interspeech_2014/i14_2635.pdf)) here, and a class based speed-up technique is used and the algorithm, the detail about this technique will be discussed later. The reuslts are showed in Table 1 and will be used as the baseline in this paper.
+Comparision among diffrent types of NNLMs have already been made on both small corpus and large ones ([Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf); [Sundermeyer et al., 2013](https://core.ac.uk/download/pdf/36583567.pdf)). The results show that RNNLMs outperformed FNNLMs and the best performance is achieved using LSTM-RNNLMs. However, one or more optimization techniques are adopted for the NNLMs used in these comparision, which makes the result not suitable for further analysis. So the plain version of the three types of NNLMs and their variants are tested on Brown Corpus and One Billion Word Benchmark (OBWB) ([Chelba et al., 2014](http://m.isca-speech.org/archive/archive_papers/interspeech_2014/i14_2635.pdf)) here, and a class based speed-up technique is used and the algorithm, the detail about this technique will be discussed in another post.
+
+#### 5.1. Feed-forward Neural Networl Lanugage Models
+Although feed-forward neural network language models had gone out of reachers' sign after recurrent neural network was introduced into neural network language modeling, some results of studies on feed-forward neural network language models are still posted here for completeness. Figure 3 shows the effect of the number of nodes in hidden layer on performance of feed-forward neural network language models. 
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="thumbnail">
+            <img src="">
+            <div class="caption">
+                <p class="text-center">Figure 3. Number of nodes in hidden layer</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="thumbnail">
+            <img src="">
+            <div class="caption">
+                <p class="text-center">Figure 4. Number of nodes in hidden layer</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="thumbnail">
+            <img src="">
+            <div class="caption">
+                <p class="text-center">Figure 5. Number of nodes in hidden layer</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+#### 5.2. Recurrent Neural Networl Lanugage Models
+
+The reuslts are showed in Table 1 and will be used as the baseline in this paper.
 
 <p style="text-align: center;">Table 1. Comparison of different NNLMs</p>
 

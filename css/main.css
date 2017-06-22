@@ -33,6 +33,10 @@ html {
     font-weight: 200;
 }
 
+.caption p{
+    font-size: 16px;
+}
+
 .footer {
     color: #aaaaaa;
     text-align: center;
