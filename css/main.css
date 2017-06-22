@@ -14,6 +14,15 @@ html {
     color: #000000;
 }
 
+.post-title h3{
+    font-size: 20px;
+}
+
+.post-date{
+    font-size: 16px;
+    
+}
+
 .post-content {
     padding-top: 10px;
     padding-bottom: 20px;

@@ -3,6 +3,6 @@ layout: default
 title: About
 ---
 
-## Dengliang Shi
+## D. SHI
 
 Nothing yet!
