@@ -18,7 +18,7 @@ $$
 
 Statistic language models all take this chain rule as base, and this rule is built under the assumption that words in a sequence only depend on their prvious context. Nevertheless, this is not always the case in natural languages.
 
-##### 2.1 Feedforward Neural Network Language Model, FNNLM
+#### 2.1 Feedforward Neural Network Language Model, FNNLM
 The architecture of the original feedforward neural network language model (FNNLM) in [Bengio et al. (2001, 2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) is showed as in Figure 1. In Bengio's model, a vocabulary is pre-built from a training data set, and the order of words in it is fixed. So each word in this vocabulary has a unique index, just like a fixed order word list. The object of FNNLM is to evaluate the probabilty $$P(w_t{\mid}w_{1}...w_{t-1})$$, but, for lack of an effective representation of history, FNNLM follows the assumption of N-gram approach that the probabilty of a word in a word sequence depends on only the direct $$(n-1)$$ predecessor word:
 
 $$P(w_t|w_1...w_{t-1})\;\approx\;P(w_t{\mid}w_{t-n+1}...w_{t-1})$$
@@ -40,7 +40,7 @@ where $$y_i\;(i\;=\; 1, 2, ..., V)$$ is $i$th element of the ouput vecotor $$y$$
 <p>Figure 1. Architecure of feed-forward nerual network language models</p>
 </div>
 
-##### 2.2 Recurrent Neural Network Language Model, RNNLM
+#### 2.2 Recurrent Neural Network Language Model, RNNLM
 The idea of applying recurrent neural network (RNN) model into language modeling was proposaled much earlier ([Bengio et al., 2003](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf); [Castro and Prat, 2003](http://www.researchgate.net/profile/Maria_Jose_Castro/publication/221582376_New_Directions_in_Connectionist_Language_Modeling/links/54552fb40cf2bccc490ccacd.pdf)), but fisrt attempt to build recurrent nerual network based language model was made by Mikolov et al. ([2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf)). Recurrent neural networks are fundamentally different from feedforward architectures in the sense that they not only operate on an input space but also on an internal state space, and the state space enables the representation of sequentially extended dependencies. Arbitrary length of history . The general architecture of recurrent neural network language model (RNNLM) can be represented as Figure 2. The representation of words in RNNLM is the same as that of FNNLM, but the input of recurrent neural network at each step is the feature vector of a direct preivous word instead of the concatenation of the $n-1$ previous words' feature vectors and all other previous words are taken into account by the internal state of previous step. At step $$t$$, recurrent neural network is represented as:
 
 $$
