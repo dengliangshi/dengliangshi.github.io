@@ -20,7 +20,7 @@ As is well known, the goal of neural network language models is to learn the dis
     </div>
 </div>
 
-However, when the data set is dealt with as a set of individual sentences, it is feasible to back-propagate errors through a whole sentence without truncation although sometimes several sentence may be very long. In addition, it makes more sense to take a sentence as a individual when dealing with a language. For a sentence $$w_1w_2\dots{w_n}$$, a start mark $$w_0$$ and end mark $$w_{n+1}$$ usually are added before ruuning language model on it. The errors will only been back-prograted inside this sentence and not truncation needed, as showed in Figure 2.
+However, when the data set is dealt with as a set of individual sentences, it is feasible to back-propagate errors through a whole sentence without truncation although sometimes several sentence may be very long and almost the same perplexity is achieved. In addition, it makes more sense to take a sentence as a individual when dealing with a language. For a sentence $$w_1w_2\dots{w_n}$$, a start mark $$w_0$$ and end mark $$w_{n+1}$$ usually are added before ruuning language model on it. The errors will only been back-prograted inside this sentence and not truncation needed, as showed in Figure 2.
 
 <div class="thumbnail">
     <img src="/images/tips/sentence.png">
