@@ -19,17 +19,19 @@ There are mainly two ways to define the minmum unit of a language ,
 ### 5. Unknown Words
 Unknown words, which is also called words out of vocabulary, is an unavoidable problem when building a language model, because it is impossible to  include all words of a language while training. 
 
-When neural network models are applied into language modeling, the computation is very expensive, in fact, it takes around one day to train nerual network language models even on a small corpus like Brown Corpus. One of the factors, which lead to the great computational burden of neural network language models, is the size of vocabulary. In order to reduce the calculated amount, not all the words from training set are added into pre-build vocabulary. The words out of vocabulary are all treated as unknown words and share one feature vector.
+When neural network models are applied into language modeling, the computation is very expensive, in fact, it takes around one day to train nerual network language models even on a small corpus like Brown Corpus. One of the factors, which lead to the great computational burden of neural network language models, is the size of vocabulary. In order to reduce the calculated amount, not all the words from training set are added into pre-build vocabulary. The words out of vocabulary are all treated as unknown words and share one feature vector, but this will decrease the performance of neural network language, in another way, higher perplexity.
 
-After some speep-up techniques are proposaled, the size of vocabulary is not a problem any more and all words from training set are included in vocabulary. There is no unknown words during training. However, some words in validation set or test set may be not in the vocabulary and this always happens. The common way to deal with this problem is to assign a feature vector, whose elements are all zero, to those words out of vocabulary, and do not take those words into account when count the total number of words and the probability of word sequence. Take a word sequence $$w_1w_2\dotsw_n$$ as an example, there is only one word $$w_t$$ which is out of vocabulary. Before running nerual network language model on this word sequence, a start and end mark should be added and make them as $$w_0$$ and $$w_{n+1} respectively. The inputs and outputs of neural network language model are as showed in Figure 3.
+After some speep-up techniques are proposaled, the size of vocabulary is not a problem any more and all words from training set are included in vocabulary. There is no unknown words during training. However, some words in validation set or test set may be not in the vocabulary and this always happens. The common way to deal with this problem is to assign a feature vector, whose elements are all zero, to those words out of vocabulary, and do not take those words into account when count the total number of words and the probability of word sequence. Take a word sequence $$w_1w_2\dots{w_n}$$ as an example, there is only one word $$w_t$$ which is out of vocabulary. Before running nerual network language model on this word sequence, a start and end mark should be added and make them as $$w_0$$ and $$w_{n+1} respectively. The inputs and outputs of neural network language model are as showed in Figure 3, and $$h_i (i=1, 2, \dots, n+1)$$ is the previous context of word $$w_i$$, i.e., $$h_i = w_0w_1\dots{w_{i-1}}$$.
 
 <div style="text-align: center;">
 <img src="/images/tips/unknownword.png">
 <p>Figure 3. How to deal with unknown words</p>
 </div>
 
-When calculating the entropy or perplexity, the total number of words is $$n$$, because word $$w_t$$ and start mark should not be counted. And the probabilty of this word sequence is:
-$$P(w_1w_2\dotsw_n) = $$
+When calculating the entropy or perplexity, the total number of words is $$n$$, because word $$w_t$$ and start mark are not counted. And the probabilty of this word sequence is:
+
+$$P(w_1w_2\dots{w_n}) = $\prod_{i=1}^{t-1}P(w_i|h_i)\dot\prod_{j=t+1}^{n+1}P(w_j|h_j)$
+
 the conditional probability of word $$w_t$$ is excluded.
 
 ### 6. Other
