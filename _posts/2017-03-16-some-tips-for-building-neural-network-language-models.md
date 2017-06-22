@@ -16,7 +16,7 @@ As is well known, the goal of neural network language models is to learn the dis
 <div class="thumbnail">
     <img src="/images/tips/updateblock.png">
     <div class="caption">
-        <p class="text-center">Figure 1 Back-propagate error in an update block</p>
+        <p class="text-center">Figure 1. Back-propagate error in an update block</p>
     </div>
 </div>
 
@@ -25,7 +25,7 @@ However, when the data set is dealt with as a set of individual sentences, it is
 <div class="thumbnail">
     <img src="/images/tips/sentence.png">
     <div class="caption">
-        <p class="text-center">Figure 2 Back-propagate error within a sentence</p>
+        <p class="text-center">Figure 2. Back-propagate error within a sentence</p>
     </div>
 </div>
 
