@@ -1,7 +1,7 @@
 ---
 layout: post
 title: An Optimization Approach to Back-propagate Errors
-abstract: A new implemetation of BPTT algorithm is proposed in this post. $O(n^4)$
+abstract: A new implemetation of BPTT algorithm is proposed in this post.
 ---
 
 ### 1. Introduction
