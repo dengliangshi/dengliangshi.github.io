@@ -37,6 +37,11 @@ html {
     font-size: 16px;
 }
 
+.about {
+    font-size: 20px;
+    text-align:justify;
+}
+
 .footer {
     color: #aaaaaa;
     text-align: center;
