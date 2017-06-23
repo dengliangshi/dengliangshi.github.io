@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hierarchical Neural Network Language Model
+title: Hierarchical neural network language model
 abstract: In hierarchical neural network language model, words are classified into several word classes according to their freqency. There are two output layers for words and classes respectively. The algorithms for assigning words with classes are also included.
 ---
 

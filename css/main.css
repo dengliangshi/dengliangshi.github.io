@@ -9,6 +9,19 @@ html {
   }
 }
 
+.navbar-nav li{
+    padding-top: 10px;
+    font-size: 18px;
+}
+.navbar-brand {
+height: 70px;
+padding-top: 10px;
+}
+
+.navbar {
+min-height: 70px;
+}
+
 .post-title a{
     text-decoration: none;
     color: #000000;

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Neural Network Languge Models
+title: Neural network languge models
 abstract: Different architectures of neural network language models are decribed in this post, including feedforward neural network language model, recurrent neural network model and its long short term memory version. Variants of these nerual network language models will also be discussed, like using different activation functions, with or without direct connections between input and output layers and adopting bias terms or not. General issues about training and testing neural network language models are also included in this post.
 ---
 

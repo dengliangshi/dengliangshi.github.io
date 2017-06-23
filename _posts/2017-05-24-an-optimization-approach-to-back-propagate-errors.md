@@ -1,6 +1,6 @@
 ---
 layout: post
-title: An Optimization Approach to Back-propagate Errors
+title: An optimization approach to back-propagate errors
 abstract: A new implemetation of BPTT algorithm is proposed in this post.
 ---
 
