@@ -46,6 +46,10 @@ min-height: 70px;
     font-weight: 200;
 }
 
+.post-content h4{
+    padding-top: 10px;
+}
+
 .caption p{
     font-size: 16px;
 }

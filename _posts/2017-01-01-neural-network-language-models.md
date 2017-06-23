@@ -4,6 +4,8 @@ title: Neural network languge models
 abstract: Different architectures of neural network language models are decribed in this post, including feedforward neural network language model, recurrent neural network model and its long short term memory version. Variants of these nerual network language models will also be discussed, like using different activation functions, with or without direct connections between input and output layers and adopting bias terms or not. General issues about training and testing neural network language models are also included in this post.
 ---
 
+> *The source code for the neural network language models described in this post can be found [here](https://github.com/dengliangshi/pynnlms).*
+
 #### 1. INTRODUCTION
 Generally, well designed language model (LM) makes a critical difference in various natural language processing (NLP) tasks, including speech recognition, machine translation, semantic extraction and etc. Language modeling, therefore, has been the research focus in NLP field all the time, and a large number of sound research results have been published for decades. N-gram based language modeling, a non-paramtric approach, is used to be state of the art, but now a paramtric approach, neural network language modeling is considered to show the best performance, and become the most commonly used language modeling technique.
 
@@ -103,7 +105,7 @@ As metioned above, two corpora are chosen for experiments in this paper, Brown c
 #### 4. EVALUATION
 The performance of neural network language models are usually measured by perflexity (PPL) which corresponds to the cross-entropy between the language model and test data. The perflexity of word sequence $$\textbf{w}=[w_0, w_1, ..., w_K]$$ is defined as:
 
-$$PPL\;=\;\sqrt[K]{\prod^{K}_{i=0}\frac{1}{P(w_i|w_0...w_{i-1})}}\;=\;2^{-\frac{1}{K}\sum^{K}_{i=0}log_2P(w_i|w_0...w_i{i-1})}$$
+$$PPL\;=\;\sqrt[K]{\prod^{K}_{i=0}\frac{1}{P(w_i|w_0...w_{i-1})}}\;=\;2^{-\frac{1}{K}\sum^{K}_{i=0}\textrm{log}_2P(w_i|w_0...w_i{i-1})}$$
 
 Perflexity can be defined as the exponential of the average number of bits required to encode the test data using a language model and lower perflexity indicates that the language model is closer to the true model which generates the test data.
 
@@ -116,7 +118,7 @@ Although feed-forward neural network language models had gone out of reachers' s
 <div class="row">
     <div class="col-sm-6">
         <div class="thumbnail">
-            <img src="">
+            <img src="/images/nnlms/fnn-h.png">
             <div class="caption">
                 <p class="text-center">Figure 3. Number of nodes in hidden layer</p>
             </div>
@@ -124,17 +126,17 @@ Although feed-forward neural network language models had gone out of reachers' s
     </div>
     <div class="col-sm-6">
         <div class="thumbnail">
-            <img src="">
+            <img src="/images/nnlms/fnn-n.png">
             <div class="caption">
-                <p class="text-center">Figure 4. Number of nodes in hidden layer</p>
+                <p class="text-center">Figure 4. The order of N-Gram </p>
             </div>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="thumbnail">
-            <img src="">
+            <img src="/images/nnlms/fnn-m.png">
             <div class="caption">
-                <p class="text-center">Figure 5. Number of nodes in hidden layer</p>
+                <p class="text-center">Figure 5. The size of feacture vectors</p>
             </div>
         </div>
     </div>
@@ -156,4 +158,4 @@ LSTMLM |   -   |  100  |   50    |   No   |  No  | 73.2   |  3
 The NNLMs performed in above experiments are all without direct connections from input layer to output layer and biases in both hidden and output layer. [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) suggests that better generalization and lower perplexity with no direct connections but longer training. A reasonable interpretation is that direct input-to-output connections provide a bit more capacity and faster learning of the "linear" part of mapping from word features to log-probabilities. On the other hand, without those connections the hidden units form a tight bottleneck which might force better generalization. For the biases, [Mikolov (2012)](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf) reported that no significant improvement of performance was gained with biases. So no direct connections and biases will be used in the following experiments neither.
 
 #### 6. CONCLUSION
-The LSTM language models show the best performance among all neural networl lanuguage models, and 
+The LSTM language models show the best performance among all neural networl lanuguage models, and
