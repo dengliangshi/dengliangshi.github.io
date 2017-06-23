@@ -14,12 +14,12 @@ html {
     font-size: 18px;
 }
 .navbar-brand {
-height: 70px;
-padding-top: 10px;
+    height: 70px;
+    padding-top: 10px;
 }
 
 .navbar {
-min-height: 70px;
+    min-height: 70px;
 }
 
 .post-title a{

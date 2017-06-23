@@ -1,13 +1,11 @@
 ---
 layout: post
 title: An optimization approach to back-propagate errors
-abstract: A new implemetation of BPTT algorithm is proposed in this post.
+abstract: It is easy to get confused about back-propagation through time (BPTT) algorithm when starting to implement it in some applications, at least I did. In this post, if BPTT should always be implemented with truncation will be discussed, and a common mistake in impementation of BPTT will be explained.
 ---
 
 ### 1. Introduction
 Back-propagation through time (BPTT) algorithm is a gradients training recurrent neural network was first proposed by Rumelhart et al. (1986), and 
-
-
 
 ### 2. Optimization Approach 
 For stardand recurrent neural network (RNN) model (Figure 1), it can be represented as:
