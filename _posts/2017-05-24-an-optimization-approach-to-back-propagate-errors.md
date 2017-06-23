@@ -7,6 +7,8 @@ abstract: A new implemetation of BPTT algorithm is proposed in this post.
 ### 1. Introduction
 Back-propagation through time (BPTT) algorithm is a gradients training recurrent neural network was first proposed by Rumelhart et al. (1986), and 
 
+
+
 ### 2. Optimization Approach 
 For stardand recurrent neural network (RNN) model (Figure 1), it can be represented as:
 
@@ -32,6 +34,25 @@ the final error gradient for $$x_i$$ is
 
 $$\frac{\partial{E_i}}{\partial{x_i}}=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{x_i}}$$
 
+```
+def bptt(self):
+    """A naive implementation of BPTT.
+    """
+    dLdb = np.zeros(self.hidden_size)
+    dLdx = np.zeros((self.T, self.input_size))
+    dLdU = np.zeros((self.hidden_size, self.input_size))
+    dLdW = np.zeros((self.hidden_size, self.hidden_size))
+    for t in xrange(self.T-1, -1, -1):
+        dLdp = self.dLds[t] * (1.0 - (self.s[t] ** 2))
+        for step in xrange(t, -1, -1):
+            dLdU += np.outer(dLdp, self.x[step])
+            dLdW += np.outer(dLdp, self.s[step-1])
+            dLdx[step] += np.dot(self.U.T, dLdp)
+            dLdb += dLdp
+            dLdp = np.dot(self.W.T, dLdp) * (1.0 - (self.s[step-1] ** 2))
+    return dLdx, dLdU, dLdW, dLdb
+```
+
 At each time step, the error should be backpropagation throngh all the previous time step. If the input sequence is long, the compution will be very expensive. But, with a careful observe, if 
 
 $$\frac{\partial{E_i}}{\partial{x_i}}=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{x_i}}=\frac{\partial{s_i}}{\partial{x_i}}\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{s_i}}$$
@@ -43,6 +64,24 @@ $$\frac{\partial{E_i}}{\partial{x_i}} = U^T\frac{\partial{E_i}}{\partial{s_i}} =
 it indicates that the error two part: the error from current output and the error from all late time step. Instead of propagation the error to all the previous time step, just accumulate the error gradient to the hidden state of directly previous step. 
 
 The 
+
+```
+def new_bptt(self):
+    """A optimized implementation of BPTT.
+    """
+    dLdb = np.zeros(self.hidden_size)
+    dLdx = np.zeros((self.T, self.input_size))
+    dLdU = np.zeros((self.hidden_size, self.input_size))
+    dLdW = np.zeros((self.hidden_size, self.hidden_size))
+    for t in xrange(self.T-1, -1, -1):
+        dLdp = self.dLds[t] * (1.0 - (self.s[t] ** 2))
+        dLdU += np.outer(dLdp, self.x[t])
+        dLdW += np.outer(dLdp, self.s[t-1])
+        dLdx[t] += np.dot(self.U.T, dLdp)
+        dLdb += dLdp
+        self.dLds[t-1] += np.dot(self.W.T, dLdp)
+    return dLdx, dLdU, dLdW, dLdb
+```
 
 ### 3. Comarsion
 The computational complexity of previous implemetation of BPTT without truncation is $$O(n^2)$$, and $$n$$ is the length of input sequence. the proposed approach for BPTT is $$O(n)$$, which mean the new approach will be n times faster than preivous one. For truncated BPTT, like m steps the computational complexity will be $$O(nm)$$, and slower than the optimization method.
