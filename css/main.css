@@ -1,5 +1,5 @@
 html {
-  font-family: "Helvetica", sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-size: 20px;
   line-height: 1.5;
 }
@@ -7,6 +7,10 @@ html {
   html {
     font-size: 18px;
   }
+}
+
+body {
+    font-family: "Quicksand", sans-serif;
 }
 
 .navbar-nav li{
@@ -27,8 +31,8 @@ html {
     color: #000000;
 }
 
-.post-title h3{
-    font-size: 20px;
+.post-title{
+    font-size: 26px;
 }
 
 .post-date{
@@ -42,8 +46,7 @@ html {
     text-align:justify;
 }
 .post-content p{
-    font-size: 18px;
-    font-weight: 200;
+    font-size: 20px;
 }
 
 .post-content h4{

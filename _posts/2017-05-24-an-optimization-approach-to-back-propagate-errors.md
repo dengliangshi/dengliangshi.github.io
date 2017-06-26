@@ -92,3 +92,5 @@ def new_bptt(dLds):
 ```
 
 For training recurrent network models on short sequences, truncation is not necessary. Take recurrent neural language model as an example, if treat data set as individual sentences and training model sentence by sentence, no truncation need to be applied. On the other hand, if data set is dealt with as a single long sequence, it is not feasible to do a complete back-propagation and the convergence will be diffcult if the model is updated after running over the whole long sequence. In this case, update block is usually adopted and the model is updated each block (details about this please refer to [previous post](https://dengliangshi.github.io/2017/03/16/some-tips-for-building-neural-network-language-models.html)). The errors in current block will be back-propagated only several time steps in previous blocks, this is truncated BPTT.
+
+<img src="/images/signature.png" align="right">
