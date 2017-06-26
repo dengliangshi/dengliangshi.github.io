@@ -5,7 +5,7 @@ abstract: It is easy to get confused about back-propagation through time (BPTT) 
 ---
 
 #### 1. INTRODUCTION
-Back-propagation through time (BPTT) algorithm is a gradient training strategy for recurrent neural network, and was first proposed by [Rumelhart et al. (1986)](), and 
+Back-propagation through time (BPTT) algorithm is a gradient training strategy for recurrent neural network, and was first proposed by [Rumelhart et al. (1986)](http://patentimages.storage.googleapis.com/pdfs/US5067164.pdf).
 
 #### 2. BACK-PROPAGATION THROUGH TIME (BPTT) ALGORITHM
 For a stardand recurrent neural network (RNN) model (as showed in Figure 1), it can be represented as:
@@ -43,21 +43,22 @@ $$\frac{\partial{E_i}}{\partial{x_i}}=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partia
 One common way to implement bptt is showed as following code block which is written in Python. At each time step, the error should be back-propagated throngh all the previous time steps. If the input sequence is long, the computation will be very expensive. This sometimes is taken as the reason for why truncation needed for BPTT by mistake.
 
 ```
-def bptt(self):
+def bptt(dLds):
     """A naive implementation of BPTT.
     """
-    dLdb = np.zeros(self.hidden_size)
-    dLdx = np.zeros((self.T, self.input_size))
-    dLdU = np.zeros((self.hidden_size, self.input_size))
-    dLdW = np.zeros((self.hidden_size, self.hidden_size))
-    for t in xrange(self.T-1, -1, -1):
-        dLdp = self.dLds[t] * (1.0 - (self.s[t] ** 2))
+    T = len(dLds)
+    dLdb = np.zeros(hidden_size)
+    dLdx = np.zeros((T, input_size))
+    dLdU = np.zeros((hidden_size, input_size))
+    dLdW = np.zeros((hidden_size, hidden_size))
+    for t in xrange(T-1, -1, -1):
+        dLdp = dLds[t] * (1.0 - (s[t] ** 2))
         for step in xrange(t, -1, -1):
-            dLdU += np.outer(dLdp, self.x[step])
-            dLdW += np.outer(dLdp, self.s[step-1])
+            dLdU += np.outer(dLdp, x[step])
+            dLdW += np.outer(dLdp, s[step-1])
             dLdx[step] += np.dot(self.U.T, dLdp)
             dLdb += dLdp
-            dLdp = np.dot(self.W.T, dLdp) * (1.0 - (self.s[step-1] ** 2))
+            dLdp = np.dot(W.T, dLdp) * (1.0 - (s[step-1] ** 2))
     return dLdx, dLdU, dLdW, dLdb
 ```
 
@@ -73,20 +74,20 @@ $$
 With dynamic planning, instead of propagating the error to all the previous time step immediately, just calculate the error gradients for each hidden layer firstly and accumulate the error gradient to the hidden state of directly previous step at each time step. The code for this implementaion of BPTT in python is as follows:
 
 ```
-def new_bptt(self):
+def new_bptt(dLds):
     """A optimized implementation of BPTT.
     """
-    dLdb = np.zeros(self.hidden_size)
-    dLdx = np.zeros((self.T, self.input_size))
-    dLdU = np.zeros((self.hidden_size, self.input_size))
-    dLdW = np.zeros((self.hidden_size, self.hidden_size))
-    for t in xrange(self.T-1, -1, -1):
-        dLdp = self.dLds[t] * (1.0 - (self.s[t] ** 2))
-        dLdU += np.outer(dLdp, self.x[t])
-        dLdW += np.outer(dLdp, self.s[t-1])
+    dLdb = np.zeros(hidden_size)
+    dLdx = np.zeros((T, input_size))
+    dLdU = np.zeros((hidden_size, input_size))
+    dLdW = np.zeros((hidden_size, hidden_size))
+    for t in xrange(T-1, -1, -1):
+        dLdp = dLds[t] * (1.0 - (s[t] ** 2))
+        dLdU += np.outer(dLdp, x[t])
+        dLdW += np.outer(dLdp, s[t-1])
         dLdx[t] += np.dot(self.U.T, dLdp)
         dLdb += dLdp
-        self.dLds[t-1] += np.dot(self.W.T, dLdp)
+        self.dLds[t-1] += np.dot(W.T, dLdp)
     return dLdx, dLdU, dLdW, dLdb
 ```
 
