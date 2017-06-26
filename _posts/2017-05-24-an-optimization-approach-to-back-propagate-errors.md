@@ -1,36 +1,46 @@
 ---
 layout: post
 title: An optimization approach to back-propagate errors
-abstract: It is easy to get confused about back-propagation through time (BPTT) algorithm when starting to implement it in some applications, at least I did. In this post, if BPTT should always be implemented with truncation will be discussed, and a common mistake in impementation of BPTT will be explained.
+abstract: It is easy to get confused about back-propagation through time (BPTT) algorithm when starting to implement it in some applications, at least I did. In this post, if BPTT should always be implemented with truncation will be discussed, and a common misunderstanding of BPTT will be explained.
 ---
 
-### 1. Introduction
-Back-propagation through time (BPTT) algorithm is a gradients training recurrent neural network was first proposed by Rumelhart et al. (1986), and 
+#### 1. INTRODUCTION
+Back-propagation through time (BPTT) algorithm is a gradient training strategy for recurrent neural network, and was first proposed by [Rumelhart et al. (1986)](), and 
 
-### 2. Optimization Approach 
-For stardand recurrent neural network (RNN) model (Figure 1), it can be represented as:
+#### 2. BACK-PROPAGATION THROUGH TIME (BPTT) ALGORITHM
+For a stardand recurrent neural network (RNN) model (as showed in Figure 1), it can be represented as:
 
-$$y_t = Vs_t,\;s_t = f(Ux_t + Ws_{t-1})$$
+$$
+\begin{align*}
+&s_t = f(Ux_t + Ws_{t-1})\\
+&y_t = Vs_t
+\end{align*}
+$$
 
-<div style="text-align: center;">
-<img src="/images/bptt/rnn.png">
+
+<div class="thumbnail">
+    <img src="/images/bptt/rnn.png">
+    <div class="caption">
+        <p class="text-center">Figure 2. Architecure of recurrent nerual network language models</p>
+    </div>
 </div>
 
-At time step $$t$$, let the target output is $$y_{t}^{'}$$, then the error is:
-
-$$e_t = y_{t}^{'} - y_t$$
-
-Using BPTT algorithm, the error $$e_t$$ will be backpropagation throgh all the previous step. Take $$x_i$$ ($$0\leq{i}\leq{t}$$) as an example, the error gradient is:
+At time setp $$t$$, let the error in output layer are $$e_t$$, ($$0\leq{t}\leq{n}$$). Using BPTT algorithm with out any truncation, the error $$e_t$$ will be backpropagation throgh all the previous step (Figure 2). Take $$x_i$$ ($$0\leq{i}\leq{t}$$) as an example, the error gradient is:
 
 $$\frac{\partial{e_t}}{\partial{x_i}}=\frac{\partial{e_t}}{\partial{s_i}}\frac{\partial{s_i}}{\partial{x_i}}$$
 
-<div style="text-align: center;">
-<img src="/images/bptt/error.png">
+<div class="thumbnail">
+    <img src="/images/bptt/error.png">
+    <div class="caption">
+        <p class="text-center">Figure 2. Back-propagate errors using bptt</p>
+    </div>
 </div>
 
-the final error gradient for $$x_i$$ is
+the final error gradient for $$x_i$$ is 
 
 $$\frac{\partial{E_i}}{\partial{x_i}}=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{x_i}}$$
+
+One common way to implement bptt is showed as following code block which is written in Python. At each time step, the error should be back-propagated throngh all the previous time steps. If the input sequence is long, the computation will be very expensive. This sometimes is taken as the reason for why truncation needed for BPTT by mistake.
 
 ```
 def bptt(self):
@@ -51,17 +61,16 @@ def bptt(self):
     return dLdx, dLdU, dLdW, dLdb
 ```
 
-At each time step, the error should be backpropagation throngh all the previous time step. If the input sequence is long, the compution will be very expensive. But, with a careful observe, if 
+It is a common misunderstanding of BPTT. At each time step, it is not necessary to back-propagate the error throught all previous steps immediately. When training recurrent neural network, BPTT is only applied in hidden layer and input layer, and, with a careful observation, the error gradient for parameters in hidden layer and input layer can be decomposed into two parts, i.e., the error from current output and the error from all late time step:
 
-$$\frac{\partial{E_i}}{\partial{x_i}}=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{x_i}}=\frac{\partial{s_i}}{\partial{x_i}}\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{s_i}}$$
+$$
+\begin{align*}
+\frac{\partial{E_i}}{\partial{x_i}}&=\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{x_i}}=\frac{\partial{s_i}}{\partial{x_i}}\sum_{t=i}^{n}\frac{\partial{e_t}}{\partial{s_i}}\\
+&=U^T\frac{\partial{e_i}}{\partial{s_i}} + U^TW^T\frac{\partial{E_{i+1}}}{\partial{s_i}}
+\end{align*}
+$$
 
-which can be rewrited as:
-
-$$\frac{\partial{E_i}}{\partial{x_i}} = U^T\frac{\partial{E_i}}{\partial{s_i}} =  U^T(\frac{\partial{e_i}}{\partial{s_i}} + W^T\frac{\partial{E_{i+1}}}{\partial{s_i}})$$
-
-it indicates that the error two part: the error from current output and the error from all late time step. Instead of propagation the error to all the previous time step, just accumulate the error gradient to the hidden state of directly previous step. 
-
-The 
+With dynamic planning, instead of propagating the error to all the previous time step immediately, just calculate the error gradients for each hidden layer firstly and accumulate the error gradient to the hidden state of directly previous step at each time step. The code for this implementaion of BPTT in python is as follows:
 
 ```
 def new_bptt(self):
@@ -81,16 +90,4 @@ def new_bptt(self):
     return dLdx, dLdU, dLdW, dLdb
 ```
 
-### 3. Comarsion
-The computational complexity of previous implemetation of BPTT without truncation is $$O(n^2)$$, and $$n$$ is the length of input sequence. the proposed approach for BPTT is $$O(n)$$, which mean the new approach will be n times faster than preivous one. For truncated BPTT, like m steps the computational complexity will be $$O(nm)$$, and slower than the optimization method.
-
-the performance, long-short term memeory (LSTM) long dependencies, but with truncation BPTT, the advantage of LSTM is limited. In this paper, 
-
-Model | BPTT | PPL
-------|------|----
-RNN   | old  | 252
-
-### 4. Conclusion
-The proposed approach to implementate BPTT algorithm show the same performance as previous implementation without truncation, and is proportional to the length of input sequence or the number of steps errors are back-propagate for truncated one. The results of the experiments on show that the , and LSTM neural network learn the long dependencies.
-
-### References
+For training recurrent network models on short sequences, truncation is not necessary. Take recurrent neural language model as an example, if treat data set as individual sentences and training model sentence by sentence, no truncation need to be applied. On the other hand, if data set is dealt with as a single long sequence, it is not feasible to do a complete back-propagation and the convergence will be diffcult if the model is updated after running over the whole long sequence. In this case, update block is usually adopted and the model is updated each block (details about this please refer to [previous post](https://dengliangshi.github.io/2017/03/16/some-tips-for-building-neural-network-language-models.html)). The errors in current block will be back-propagated only several time steps in previous blocks, this is truncated BPTT.
