@@ -9,6 +9,12 @@ abstract: In hierarchical neural network language model, words are classified in
 
 the frequency of each word learned from training data is $$f_i$$, all words in vocabulary are sorted in descend order according to their frequency, and all words will be classified into $$n$$ classes.
 
+<div class="thumbnail">
+    <img src="/images/hrnnlms/rnnlm-class.png">
+    <div class="caption">
+        <p class="text-center">Figure 1. Architecture of hierarchical neural network language model</p>
+    </div>
+</div>
 
 ### 2. Algorithms for Class Assignment
 

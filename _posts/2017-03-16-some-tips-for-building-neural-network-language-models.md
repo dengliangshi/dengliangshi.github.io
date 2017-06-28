@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Some tips for building neural network languge models
-abstract: In this post, some tips for the implemetation details of neural network language models will be summarized, including initializing neural network language models, treating data set as a long sequence or multible sentences, taking word or character as input level, and dealing with words out of vocabulary.
+abstract: In this post, some tips for the implemetation details of neural network language models will be summarized, including initializing neural network language models, treating data set as a long sequence or multiple independent sentences, taking word or character as input level, and dealing with words out of vocabulary.
 ---
 
 #### 0. INTRODUCTION

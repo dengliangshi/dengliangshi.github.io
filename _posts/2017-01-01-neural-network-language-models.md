@@ -1,41 +1,41 @@
 ---
 layout: post
 title: Neural network languge models
-abstract: Different architectures of neural network language models are decribed in this post, including feedforward neural network language model, recurrent neural network model and its long short term memory version. Variants of these nerual network language models will also be discussed, like using different activation functions, with or without direct connections between input and output layers and adopting bias terms or not. General issues about training and testing neural network language models are also included in this post.
+abstract: Different architectures of neural network language models are decribed in this post, including feedforward neural network language models, recurrent neural network models and long short term memory ones. Variants of these nerual network language models will also be discussed, like using different activation functions, with or without direct connections between input and output layers and adopting bias terms or not. General issues about training and testing neural network language models are also included in this post.
 ---
 
 > *The source code for the neural network language models described in this post can be found [here](https://github.com/dengliangshi/pynnlms).*
 
-#### 1. INTRODUCTION
-Generally, well designed language model (LM) makes a critical difference in various natural language processing (NLP) tasks, including speech recognition, machine translation, semantic extraction and etc. Language modeling, therefore, has been the research focus in NLP field all the time, and a large number of sound research results have been published for decades. N-gram based language modeling, a non-paramtric approach, is used to be state of the art, but now a paramtric approach, neural network language modeling is considered to show the best performance, and become the most commonly used language modeling technique.
+### 1. INTRODUCTION
+Generally, well designed language model (LM) makes a critical difference in various natural language processing (NLP) tasks, including speech recognition, machine translation, semantic extraction and etc. Language modeling, therefore, has been the research focus in NLP field all the time, and a large number of sound research results have been published for decades. N-gram based language modeling, a non-paramtric approach, is used to be state of the art, but now a paramtric approach - neural network language modeling is considered to show the best performance, and become the most commonly used language modeling technique.
 
-Although some previous attempts ([Miikkulainen and Dyer, 1991](http://ftp.cs.ucla.edu/tech-report/1990-reports/900001.pdf); [Schmidhuber, 1996](http://www.complexity.ru/papers/textcompression.pdf); [Xu and Rudnicky, 2000](http://isca-speech.org/archive/archive_papers/icslp_2000/i00_1202.pdf)), details on which are provided by [Schwenk (2007)](http://wiki.inf.ed.ac.uk/twiki/pub/CSTR/ListenSemester2_2009_10/sdarticle.pdf), have been made to apply artificial neural network into language modeling, neural network language modeling has attracted researches' attention only after [Bengio et al. (2001, 2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf). Neural network language models did not show prominent advantage over other language models until Mikolov investigates recurrent neural network for language modeling (Mikolov et al., [2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf); Mikolov, [2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf)). After more than a decade's research, there are numerous imporvements, marginal or critical, have been proposed over NNLMs.
+Although some previous attempts, details on which are provided by [Schwenk (2007)](http://wiki.inf.ed.ac.uk/twiki/pub/CSTR/ListenSemester2_2009_10/sdarticle.pdf), have been made to apply artificial neural network into language modeling, neural network language modeling began to attract researches' attention only after [Bengio et al. (2001, 2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), and neural network language models did not show prominent advantage over other language models until Mikolov investigated recurrent neural network for language modeling (Mikolov et al., [2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf); Mikolov, [2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf)). After more than a decade's research, there are numerous imporvements, marginal or critical, have been proposed over NNLMs.
 
 #### 2. NEURAL NETWORK LANGUAGE MODELS, NNLMs
-The goal of neural network language models are to learn the probability function of word sentences in a language, therefore they are also termed as neural probabilistic lanuage models or neural statistic lanuage models. The probability of a word sequence $$w_1w_2...w_k$$ can be represented by the production of the conditional probability of each word given all the previous ones:
+The goal of neural network language models is to learn the joint probability function of word sequences in a language, therefore they are also termed as neural probabilistic lanuage models or neural statistic lanuage models. The probability of a word sequence $$w_1w_2...w_T$$ can be represented by the production of the conditional probability of each word given all the previous ones:
 
 $$
-P\;=\;\prod^{k}_{t=1}P(w_t{\mid}w_1...w_{t-1})
+P(w_1w_2...w_T)\;=\;\prod^{T}_{t=1}P(w_t{\mid}w_1...w_{t-1})
 $$
 
-Statistic language models all take this chain rule as base, and this rule is built under the assumption that words in a sequence only depend on their prvious context. Nevertheless, this is not always the case in natural languages.
+Almost all statistic language models take this chain rule as a base, and this rule is built under the assumption that words in a sequence only depend on their prvious context. Nevertheless, this is not always the case in natural languages.
 
 #### 2.1. Feedforward Neural Network Language Model, FNNLM
-The architecture of the original feedforward neural network language model (FNNLM) in [Bengio et al. (2001, 2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) is showed as in Figure 1. In Bengio's model, a vocabulary is pre-built from a training data set, and the order of words in it is fixed. So each word in this vocabulary has a unique index, just like a fixed order word list. The object of FNNLM is to evaluate the probabilty $$P(w_t{\mid}w_{1}...w_{t-1})$$, but, for lack of an effective representation of history, FNNLM follows the assumption of N-gram approach that the probabilty of a word in a word sequence depends on only the direct $$(n-1)$$ predecessor word:
+The object of FNNLM is to evaluate the probabilty $$P(w_t{\mid}w_{1}...w_{t-1})$$, but, for lack of an effective representation of history, FNNLM follows the assumption of N-gram approach that the conditional probabilty of a word in a word sequence only depends on the direct $$(n-1)$$ predecessor words, this is:
 
 $$P(w_t|w_1...w_{t-1})\;\approx\;P(w_t{\mid}w_{t-n+1}...w_{t-1})$$
 
-For word $$w_t$$ in word sequence $$w_1w_2...w_k$$, its direct previous words $$w_{t-n+1},...,w_{t-1}$$ are used to predict its conditional probabilty. In FNNLM, words $$w_{t-n+1},...,w_{t-1}$$ are projected linearly into feature vectors using a shared matrix $$C\in{\mathbb{R}^{V\times{m}}}$$ according to their index in the vocabulary, where $$V$$ is the size of the vocabulary and $$m$$ is the feature vector's size. In fact, each row of projection maxtrix $$C$$ is a feature vector of a word. The input $$x\in\mathbb{R}^{n_i}$$ of FNNLM is formed using the concatenation of the feacture vectors of words $$w_{t-n+1},...,w_{t-1}$$, where $$n_i\;=\;m\times(n-1)$$ is the size of input layer in feedforward neural network model. The feedforward neural network model can be repesented as:
+The architecture of the original feedforward neural network language model (FNNLM) in [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) is showed in Figure 1. In Bengio's model, a vocabulary is pre-built from a training data set, and each word in this vocabulary is assigned with a unique index. To predict the conditional probabilty of word $$w_t$$, its direct previous words $$w_{t-n+1},...,w_{t-1}$$ are projected linearly into feature vectors using a shared matrix $$C\in{\mathbb{R}^{K\times{m}}}$$ according to their indexs in the vocabulary, where $$K$$ is the size of the vocabulary and $$m$$ is the feature vector's size. In fact, each row of projection maxtrix $$C$$ is a feature vector of a word. The input $$x\in\mathbb{R}^{n_i}$$ of FNNLM is formed using the concatenation of the feacture vectors of words $$w_{t-n+1},...,w_{t-1}$$, and $$n_i\;=\;m\times(n-1)$$ is the size of input layer in feedforward neural network model. Generally, the feedforward neural network model can be repesented as:
 
 $$y\;=\;V\cdot{f(U\cdot{x}\;+b)}\;+\;M\cdot{x}\;+\;d$$
 
-Where, $$U\in\mathbb{R}^{n_h\times{n_i}}$$,  $$V\in\mathbb{R}^{n_o\times{n_h}}$$ are weight matrixes, $$n_h$$ is the number of nodes in hidden layer, $$n_o=V$$ is the size of output layer, weight matrix $$M\in\mathbb{R}^{n_o\times{n_i}}$$ is for the direct connection between input layer and output layer, $$b\in\mathbb{R}^{n_h}$$ and $$d\in\mathbb{R}^{n_o}$$ are biase vectors in hidden layer and output layer respectively, $$y\in\mathbb{R}^{n_o}$$ is the output vector, and $$f(\cdot)$$ is activation function.
+Where, $$U\in\mathbb{R}^{n_h\times{n_i}}$$,  $$V\in\mathbb{R}^{n_o\times{n_h}}$$ are weight matrixes, $$n_h$$ is the number of nodes in hidden layer, $$n_o=K$$ is the size of output layer, weight matrix $$M\in\mathbb{R}^{n_o\times{n_i}}$$ is for the direct connections between input layer and output layer, $$b\in\mathbb{R}^{n_h}$$ and $$d\in\mathbb{R}^{n_o}$$ are bias terms in hidden layer and output layer respectively, $$y\in\mathbb{R}^{n_o}$$ is output vector, and $$f(\cdot)$$ is activation function.
 
-The $$i$$th element of output vector $$y$$ is the unnormalized probability $$P(w_i{\mid}w_{t-n+1}...w_{t-1})$$, where $$w_i$$ is the $$i$$th word in the vocabulaury. In order to guarantee all the output probailities are positive and summing to 1, a softmax layer is always adopted following the output layer of feedforward nerual network:
+The $$i$$th element of output vector $$y$$ is the unnormalized probability $$P(w_i{\mid}w_{t-n+1}...w_{t-1})$$, where $$w_i$$ is the word with index $$i$$ in vocabulaury. In order to guarantee all the output probailities are positive and summing to 1, a softmax layer is always adopted following the output layer of feedforward nerual network:
 
-$$f(y_i) = \frac{e^{y_i}}{\sum_{j=1}^{V}e^{y_j}}, i = 1, 2, ..., V$$
+$$f(y_i) = \frac{e^{-y_i}}{\sum_{j=1}^{K}e^{-y_j}}, i = 1, 2, ..., K$$
 
-where $$y_i\;(i\;=\; 1, 2, ..., V)$$ is $i$th element of the ouput vecotor $$y$$.
+where $$y_i\;(i\;=\; 1, 2, ..., K)$$ is the $i$th element of ouput vecotor $$y$$.
 
 <div class="thumbnail">
     <img src="/images/nnlms/fnnlm.png">
@@ -44,8 +44,10 @@ where $$y_i\;(i\;=\; 1, 2, ..., V)$$ is $i$th element of the ouput vecotor $$y$$
     </div>
 </div>
 
+In Bengio's initial work ([Bengio et al., 2001](http://www.iro.umontreal.ca/~lisa/publications2/index.php/attachments/single/74)), two different architetures of FNNLMs are explored: direct and cycling architecture. The direct architeture is the one described above. In cycling archieture, both history context $$w_{t-n+1},...,w_{t-1}$$ and candidate word $$w_i$$ are taken as the inputs of model, and the ouput of model is just the conditional probability of candidate word instead of a vector. After running the model over all the words in vocabulary, the output coditional probabilities are normalized using softmax function. Now, neural network language models all follow the direct architecture, because experimental results show the direct architecture is about 2% better than the cycling one, and the direct one is more compact.
+
 #### 2.2. Recurrent Neural Network Language Model, RNNLM
-The idea of applying recurrent neural network (RNN) model into language modeling was proposaled much earlier ([Bengio et al., 2003](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf); [Castro and Prat, 2003](http://www.researchgate.net/profile/Maria_Jose_Castro/publication/221582376_New_Directions_in_Connectionist_Language_Modeling/links/54552fb40cf2bccc490ccacd.pdf)), but fisrt attempt to build recurrent nerual network based language model was made by Mikolov et al. ([2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf)). Recurrent neural networks are fundamentally different from feedforward architectures in the sense that they not only operate on an input space but also on an internal state space, and the state space enables the representation of sequentially extended dependencies. Arbitrary length of history . The general architecture of recurrent neural network language model (RNNLM) can be represented as Figure 2. The representation of words in RNNLM is the same as that of FNNLM, but the input of recurrent neural network at each step is the feature vector of a direct preivous word instead of the concatenation of the $n-1$ previous words' feature vectors and all other previous words are taken into account by the internal state of previous step. At step $$t$$, recurrent neural network is represented as:
+The idea of applying recurrent neural network (RNN) model into language modeling was proposaled much earlier ([Bengio et al., 2003](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf); [Castro and Prat, 2003](http://www.researchgate.net/profile/Maria_Jose_Castro/publication/221582376_New_Directions_in_Connectionist_Language_Modeling/links/54552fb40cf2bccc490ccacd.pdf)), but fisrt attempt to build recurrent nerual network based language model was made by Mikolov et al. ([2010](http://isca-speech.org/archive/archive_papers/interspeech_2010/i10_1045.pdf), [2011](http://www.mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf)). Recurrent neural networks are fundamentally different from feedforward architectures in the sense that they not only operate on an input space but also on an internal state space, and the state space enables the representation of sequentially extended dependencies. For word sequence processing, arbitrary length of history can be presented by recurrent neural network. The general architecture of recurrent neural network language model (RNNLM) can be represented as Figure 2. The representation of words in RNNLM is the same as FNNLM, but the input of recurrent neural network at each step is the feature vector of a single direct preivous word instead of the concatenation of the $n-1$ previous words' feature vectors and all other previous words are taken into account by the internal state of previous step. At step $$t$$, recurrent neural network is represented as:
 
 $$
 \begin{align*}
@@ -54,7 +56,7 @@ $$
 \end{align*}
 $$
 
-where, weight matrix $$W\in\mathbb{R}^{n_h\times{n_h}}$$. The output of recurrent neural network are also unnormalized probabilities and should be regularized by a softmax layer.
+where, $$W\in\mathbb{R}^{n_h\times{n_h}}$$ is weight matrix. The output of recurrent neural network are also unnormalized probabilities and should be regularized by a softmax layer.
 
 <div class="thumbnail">
     <img src="/images/nnlms/rnnlm.png">
@@ -63,7 +65,7 @@ where, weight matrix $$W\in\mathbb{R}^{n_h\times{n_h}}$$. The output of recurren
     </div>
 </div>
 
-Although above RNN can deal with all of the predecessor words to predict next word in a word sequence, but it is quit difficult to train over long term dependencies because of the vanishing problem. Long-Short Term Memoery (LSTM) RNN was raised to solve this problem, and LSTM-RNN was introduce to language modeling by [Sundermeyer et al. (2013)](https://core.ac.uk/download/pdf/36583567.pdf). LSTM-RNN was introduced by Hochreiter and Schmidhuber (1997) and were refined and popularized by many people in following work (Gers and Schmidhuber, 2000; [Cho et al. 2014](http://mirror.aclweb.org/emnlp2014/papers/pdf/EMNLP2014179.pdf)). The general architecture of LSTM can be represented as:
+Although above RNNLM can deal with all of the predecessor words to predict next word in a word sequence, but it is quit difficult to train over long term dependencies because of the vanishing problem. Long-Short Term Memoery (LSTM) was raised to solve this problem, and LSTM was introduce to language modeling by [Sundermeyer et al. (2013)](https://core.ac.uk/download/pdf/36583567.pdf). LSTM was proposed by Hochreiter and Schmidhuber (1997) and were refined and popularized by many people in following work (Gers and Schmidhuber, 2000; [Cho et al. 2014](http://mirror.aclweb.org/emnlp2014/papers/pdf/EMNLP2014179.pdf)). The general architecture of LSTM can be represented as:
 
 $$
 \begin{align*}
@@ -80,40 +82,62 @@ $$
 Where, $$i_t\in\mathbb{R}^{n_h}$$, $$f_t\in\mathbb{R}^{n_h}$$, $$o_t\in\mathbb{R}^{n_h}$$ are input gate, forget gate and output gate, respectively. $$c_t\in\mathbb{R}^{n_h}$$ is previous state of nodes. $$U_i$$, $$U_f$$, $$U_o$$, $$U\in\mathbb{R}^{n_h\times{n_i}}$$, $$W_i$$, $$W_f$$, $$W_o$$, $$W\in\mathbb{R}^{n_h\times{n_i}}$$, $$V_i$$, $$V_f$$, $$V_o$$, $$V\in\mathbb{R}^{n_h\times{n_i}}$$ are all weight matrixes. $$b_i$$, $$b_f$$, $$b_o$$, $$b\in\mathbb{R}^{n_h}$$, and $$d\in\mathbb{R}^{n_o}$$ are bias vectors. $$f(\cdot)$$ is the activation function in hidden layer and $$\sigma(\cdot)$$ is the activation function for gates.
 
 #### 3. TRAINING
-Training of NNLMs is achieved by maximizing the log-likelihood of the training data or a regularized criterion, e.g. by adding a weight decay penalty, and the object function is:
+Training of NNLMs is usually achieved by maximizing the log-likelihood of the training data or a regularized criterion, e.g. by adding a weight decay penalty, and the object function is:
 
-$$L = \frac{1}{T}\sum_{t=1}^{T}\textrm{log}(P(w_t, w_{t-1}, ..., w_{t-n+1}; \theta))\;+\;R(\theta)$$
+$$
+L = \frac{1}{T}\sum_{t=1}^{T}\textrm{log}(P(w_t|h_t, \theta))\;+\;R(\theta)
+$$
 
-where, $$\theta$$ is the set of parameters of NNLMs, $$R(\theta)$$ is a regularization term.
+where, $$h_t$$ is history context, $$\theta$$ is the set of parameters of NNLMs, $$R(\theta)$$ is a regularization term.
 
-Cross entropy criterion is used
+The log-likehood gradient for the output of neural network model at step $$t$$ is:
 
-$$L = \frac{1}{T}\sum_{i=1}^{T}\hat{o}\textrm{log}(o)$$
+$$
+\begin{align*}
+\frac{\partial{\textrm{log}(P(w_t{\mid}h_t)}}{\partial{y_i}}&=\;\frac{\partial{\textrm{log}(e^{-y_t}/{\sum_{j=1}^{K}e^{-y_j}})}}{\partial{y_i}}\\
+&=\;-\frac{\partial{y_t}}{\partial{y_i}}\;-\;\frac{\partial{\textrm{log}(\sum_{j=1}^{K}e^{-y_j}})}{\partial{y_i}}\\
+&=\;-\frac{\partial{y_t}}{\partial{y_i}}\;-\;\frac{1}{\sum_{j=1}^{K}e^{-y_j}}\frac{\partial{\sum_{j=1}^{K}e^{-y_j}}}{\partial{y_i}}\\
+&=\;-\frac{\partial{y_t}}{\partial{y_i}}\;-\;\frac{1}{\sum_{j=1}^{K}e^{-y_j}}\frac{\partial{e^{-y_i}}}{\partial{y_i}}\\
+&=\;-\frac{\partial{y_t}}{\partial{y_i}}\;+\;\frac{e^{-y_i}}{\sum_{j=1}^{K}e^{-y_j}}\\
+&=\;-\frac{\partial{y_t}}{\partial{y_i}}\;+\;P(w_i{\mid}h_t)
+\end{align*}
+$$
 
-For word $$w_t$$, the cross entropy is $$L_t = \hat{o}log{o}$$ and the except output $$\hat{o}$$ is 1 of $$V$$ vector, and only the  the gradient for the output of neural network is
+The log-likehood gradient for all outputs can be represented as:
 
-$$\frac{\partial{L_t}}{\partial{y_i}} = \frac{\partial{\hat{o}\textrm{log}(o)}}{\partial{y_i}} = 1 - o_i$$
+$$
+\frac{\partial{\textrm{log}(P(w_t{\mid}h_t)}}{\partial{y_t}}\;=\;\left\{\begin{array}{ll}
+-1\;+\;P(w_t{\mid}h_t) & i=t\\
+P(w_i{\mid}h_t) & i\neq{t}\\
+\end{array} \right.
+$$
 
-Stochastic gradient descent (SGD) method is a proper learning algorithm for training all NNLMs, and the gradients of errors for parameters $\theta$ are computed using backpropagation (BP) algorithm. For RNNLMs, backpropagation through time (BPTT) ([Rumelhart, 1986](http://www.iro.umontreal.ca/~vincentp/ift3390/lectures/backprop_old.pdf)) should be used for better performance, and [Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf) reported that error gradients were computed through 5 time steps is enough, at least for simple RNNLM on small corpus. The parameters of NNLMs are updated as:
+where $$i=1, 2, \dots, K$$.
 
-$$\theta = \theta + \alpha\frac{\partial{L}}{\partial{\theta}} - \beta\theta$$
+Stochastic gradient descent (SGD) method is a proper learning algorithm for training all NNLMs, and the gradients of errors for parameters $\theta$ are computed using backpropagation (BP) algorithm. For RNNLMs, backpropagation through time (BPTT) ([Rumelhart, 1986](http://www.iro.umontreal.ca/~vincentp/ift3390/lectures/backprop_old.pdf)) should be used for better performance. The gradient for parameters of model is:
+
+$$
+\frac{\partial{\textrm{log}(P(w_t{\mid}h_t)}}{\partial{\theta}}\;=\;\sum_{i=1}^{K}\frac{\partial{\textrm{log}(P(w_t{\mid}h_t)}}{\partial{y_i}}\frac{\partial{y_i}}{\partial{\theta}}
+$$
+
+The parameters of NNLMs are updated as:
+
+$$\theta = \theta - \alpha\frac{\partial{L}}{\partial{\theta}} - \beta\theta$$
 
 where, $$\alpha$$ is learning rate and $$\beta$$ is regularization parameter.
 
-As metioned above, two corpora are chosen for experiments in this paper, Brown corpus and One Billion Word Benchmark. They are all frequenctly used corpora for studies on language modeling and avaliable for everyone freely. Experimental setup for Brown corpus is the same as that in [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), the first 800000 words (ca01$$\sim$$cj54) were used for training, the following 200000 words (cj55$$\sim$$cm06) for validation and the rest (cn01$$\sim$$cr09) for testing.
-
 #### 4. EVALUATION
-The performance of neural network language models are usually measured by perflexity (PPL) which corresponds to the cross-entropy between the language model and test data. The perflexity of word sequence $$\textbf{w}=[w_0, w_1, ..., w_K]$$ is defined as:
+The performance of neural network language models are usually measured by perflexity (PPL) which corresponds to the cross-entropy between the language model and test data. The perflexity of word sequence $$w_1w_2...w_T$$ is defined as:
 
-$$PPL\;=\;\sqrt[K]{\prod^{K}_{i=0}\frac{1}{P(w_i|w_0...w_{i-1})}}\;=\;2^{-\frac{1}{K}\sum^{K}_{i=0}\textrm{log}_2P(w_i|w_0...w_i{i-1})}$$
+$$PPL\;=\;\sqrt[T]{\prod^{T}_{t=1}\frac{1}{P(w_t|h_t)}}\;=\;2^{-\frac{1}{T}\sum^{T}_{t=0}\textrm{log}_2P(w_t|h_t)}$$
 
 Perflexity can be defined as the exponential of the average number of bits required to encode the test data using a language model and lower perflexity indicates that the language model is closer to the true model which generates the test data.
 
 #### 5. COMPARISON OF NNLMS WITH DIFFERENT ARCHITECTURES
-Comparision among diffrent types of NNLMs have already been made on both small corpus and large ones ([Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf); [Sundermeyer et al., 2013](https://core.ac.uk/download/pdf/36583567.pdf)). The results show that RNNLMs outperformed FNNLMs and the best performance is achieved using LSTM-RNNLMs. However, one or more optimization techniques are adopted for the NNLMs used in these comparision, which makes the result not suitable for further analysis. So the plain version of the three types of NNLMs and their variants are tested on Brown Corpus and One Billion Word Benchmark (OBWB) ([Chelba et al., 2014](http://m.isca-speech.org/archive/archive_papers/interspeech_2014/i14_2635.pdf)) here, and a class based speed-up technique is used and the algorithm, the detail about this technique will be discussed in another post.
+Comparision among diffrent types of NNLMs have already been made on both small corpus and large ones ([Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf); [Sundermeyer et al., 2013](https://core.ac.uk/download/pdf/36583567.pdf)). The results show that RNNLMs outperformed FNNLMs and the best performance is achieved using LSTMLMs. However, in these experiments, the experimental setups differ from each other and different optimization techniques are used, in addition, some implementation details of NNLMs may be different and have never been described. All above difference makes the result not comparable. So the plain version of the three types of NNLMs and their variants are tested on Brown Corpus and One Billion Word Benchmark (OBWB) ([Chelba et al., 2014](http://m.isca-speech.org/archive/archive_papers/interspeech_2014/i14_2635.pdf)) here, and only a class based speed-up technique is used. Brown corpus and One Billion Word Benchmark are all frequenctly used corpora for studies on language modeling and avaliable for everyone freely. Experimental setup for Brown corpus is the same as that in [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), the first 800000 words (ca01$$\sim$$cj54) were used for training, the following 200000 words (cj55$$\sim$$cm06) for validation and the rest (cn01$$\sim$$cr09) for testing.
 
 #### 5.1. Feed-forward Neural Networl Lanugage Models
-Although feed-forward neural network language models had gone out of reachers' sign after recurrent neural network was introduced into neural network language modeling, some results of studies on feed-forward neural network language models are still posted here for completeness. Figure 3 shows the effect of the number of nodes in hidden layer on performance of feed-forward neural network language models. 
+Although feed-forward neural network language models had gone out of reachers' sign after recurrent neural network was introduced into neural network language modeling, some results of studies on feed-forward neural network language models are still posted here for completeness. Figure 3 shows the effect of the number of nodes in hidden layer on performance of feed-forward neural network language models.
 
 <div class="row">
     <div class="col-sm-6">
