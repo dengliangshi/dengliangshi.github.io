@@ -52,5 +52,3 @@ the conditional probability of word $$w_t$$ is excluded.
 
 #### 5. OTHERS
 There are some programing tricks for building neural network language models with codes. First, using one dimension arrays for weight matrix will be much faster than using two dimension arrays; Second, allocate variables with enough memeory before training or test, and avoid allocate or reallocate memory during training or test.
-
-<img src="/images/signature.png" align="right">

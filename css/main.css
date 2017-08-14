@@ -115,3 +115,8 @@ table tr th :first-child, table tr td :first-child {
 table tr th :last-child, table tr td :last-child {
     margin: 0;
 }
+
+.MathJax_Display {
+    font-size: 18px;
+    text-align: center;
+}
