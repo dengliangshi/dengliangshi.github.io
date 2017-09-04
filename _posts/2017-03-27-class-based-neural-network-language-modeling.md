@@ -1,9 +1,8 @@
 ---
 layout: post
-title: Hierarchical neural network language model
-abstract: In hierarchical neural network language model, words are classified into several word classes according to their freqency. There are two output layers for words and classes respectively. The algorithms for assigning words with classes are also included.
+title: Class based neural network language model
+abstract: The idea of word classes has been used extensively in language modeling for improving perplexities or increasing speed. In this post, some researches about introducing word classes into neural network language modeling will be described, and a extension of word classes, hierarchical neural network language model, will also be included.
 ---
-
 
 #### 1. INTRODUCTION
 The amount of computation required for neural network language models mainly lies in their output layers in which the number of nodes is equal to the size of vocabulary, usually serval ten thousands. if the size of output layer can be reduced, the amount of computation will decreased. Hierarchical neural network language modeling is proposed by [Bengio et al. (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf) as a speed-up technique for both training and test of neural network language model, by which the size of output layer is reduced significantly. The idea of hierarchical neural network language modeling is original from class-based language models ([Goodman, 2001](http://www2.denizyuret.com/ref/goodman/goodman2001.pdf)). In hierarchical neural network language models (Figure 1), words in vocabulary are classified into different classes, and the conditional probability of a word $$w_t$$ in word sequence $$w_1w_2{\dots}w_T$$ is represented as:
@@ -25,7 +24,7 @@ where $$c_i$$ is the word class $$w_t$$ blongs to. The hierarchical nerual netwo
 One of the key points to build a hierarchical neural network langauge model is to classify words into classes, and several algorithms have been raised for this. In [Bengio et al. (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf), words are clustered using WordNet. [Mikolov et al. (2011)](http://mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf) proposed two algorithms to classify words according to their frequencies in training data set.
 
 #### 2.1. Algorithm 1
-?
+The simple way to assign word classes is to cluster words uniformly and randomly. 
 
 #### 2.2. Algorithm 2
 When building vocabulary from training data set, the frequency of each word in training data set is counted. The sum of all words' frequenies is:

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sampling approximation of gradient.
+title: Sampling approximation of gradient
 abstract: Sampling approximation of gradient is a speed-up technique for trainging neural netowrk language models, and is proposaled by Bengio and Senecal. Three algorithms are represented by Bengio and Senecal, but only the importance sampling method worked finely for neural network language models. This post mainly focuses on improtance sampling, and converys it in a simpler and easier way.
 ---
 
@@ -101,5 +101,3 @@ calculate the positive contribution of the gradient;
 $N$ samples from the proposal distribution $Q$;
 
 As more efficent and easy speed up techiques have been proposed now, just posted here for completeness and no futher studies will be performanced.
-
-<img src="/images/signature.png" align="right">
