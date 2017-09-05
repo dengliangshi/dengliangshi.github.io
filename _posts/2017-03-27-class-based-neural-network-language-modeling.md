@@ -5,29 +5,35 @@ abstract: The idea of word classes has been used extensively in language modelin
 ---
 
 #### 1. INTRODUCTION
-The amount of computation required for neural network language models mainly lies in their output layers in which the number of nodes is equal to the size of vocabulary, usually serval ten thousands. if the size of output layer can be reduced, the amount of computation will decreased. Hierarchical neural network language modeling is proposed by [Bengio et al. (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf) as a speed-up technique for both training and test of neural network language model, by which the size of output layer is reduced significantly. The idea of hierarchical neural network language modeling is original from class-based language models ([Goodman, 2001](http://www2.denizyuret.com/ref/goodman/goodman2001.pdf)). In hierarchical neural network language models (Figure 1), words in vocabulary are classified into different classes, and the conditional probability of a word $$w_t$$ in word sequence $$w_1w_2{\dots}w_T$$ is represented as:
+The amount of computation required for neural network language models mainly lies in their output layers in which the number of nodes is equal to the size of vocabulary, usually several ten thousands. If the size of output layer can be reduced, the amount of computation will decreased. The idea of word classes was first invested for neural network language modeling by [Mikolov et al. (2011)](http://mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf) to solve this problem. With word classes, every word in vocabulary is assigned to a unique class, and the conditional probability of a word given its history can be decomposed into the probability of the word's class given its history and the probability of the word given its class and history, this is:
 
 $$
-P(w_t{\mid}w_1w_2{\dots}w_{t-1})\;=\;P(w_t{\mid}w_1w_2{\dots}w_{t-1}, c_i)P(c_i{\mid}w_1w_2{\dots}w_{t-1})
+P(w_{t}{\mid}w_{1}^{t-1})\;=\;P(w_t{\mid}c(w_t),w_{1}^{t-1})P(c(w_t){\mid}w_{1}^{t-1})
 $$
 
-where $$c_i$$ is the word class $$w_t$$ blongs to. The hierarchical nerual network language model has two output layers: one for the probability of words and the other for the probability of classes. At each step, only the probability of words which share the same class with target word and probability of all classes will be calculated. By this way, the time for both training and test will decrease greatly.
+where $c(w_t)$ is the class of word $w_t$. The architecture of class based LSTM-RNNLM is illustrated in Figure 1, and $p$, $q$ are the lower and upper index of words in a class respectively.
 
 <div class="thumbnail">
     <img src="/images/hnnlms/rnnlm-class.png">
     <div class="caption">
-        <p class="text-center">Figure 1. Architecture of hierarchical neural network language model</p>
+        <p class="text-center">Figure 1. Architecture of class based LSTM-NNLM</p>
     </div>
 </div>
 
+Before [Mikolov et al. (2011)](http://mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf), [Morin and Bengio (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf) extended word classes to a hierarchical binary clustering of words and built a hierarchical neural network language model. In hierarchical neural network language model, instead of assigning every word in vocabulary with a unique class, a hierarchical binary tree of words is built according to the word similarity information extracted from WordNet (C. Fellbaum, 1998), and every word in vocabulary is assigned with a bit vector:
+
+$$
+b=[b_{1}(v_i),b_{2}(v_i),\dots,b_{l}(v_i)], i=1,2,\dots,k
+$$
+
+When $b_{1}(v_i),b_{2}(v_i),\dots,b_{j-1}(v_i)$ are given, $b_j(v_i)=0, j=1,2,\dots,l$ indicates that word $v_i$ belongs to the sub-group 0 of current node and $b_j(v_i)=1$ indicates it belongs to the other one. The conditional probability of every word is represented as:
+
+$$
+P(v_{i}{\mid}w_{1}^{t-1})\;=\;\prod_{j=1}^{l}P(b_{j}(w_t){\mid}b_{1}(w_t),\dots,b_{j-1}(w_t), w_{1}^{t-1})
+$$
+
 #### 2. ALGORITHMS FOR CLASS ASSIGNMENT
-One of the key points to build a hierarchical neural network langauge model is to classify words into classes, and several algorithms have been raised for this. In [Bengio et al. (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf), words are clustered using WordNet. [Mikolov et al. (2011)](http://mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf) proposed two algorithms to classify words according to their frequencies in training data set.
-
-#### 2.1. Algorithm 1
-The simple way to assign word classes is to cluster words uniformly and randomly. 
-
-#### 2.2. Algorithm 2
-When building vocabulary from training data set, the frequency of each word in training data set is counted. The sum of all words' frequenies is:
+The simple way to assign word classes is to cluster words uniformly and randomly. [Mikolov et al. (2011)](http://mirlab.org/conference_papers/International_Conference/ICASSP%202011/pdfs/0005528.pdf) proposed two algorithms to classify words according to their frequencies in training data set. When building vocabulary from training data set, the frequency of each word in training data set is counted. The sum of all words' frequenies is:
 
 $$
 F = \sum_{i=1}^{K}f_i
@@ -39,10 +45,7 @@ $$\frac{i}{N}<\sum_{j=1}^{t}f_j\leq\frac{i+1}{N}$$
 
 where $$N$$ is the total number of word classes whose optimal value is around $$\sqrt{K}$$.
 
-The word classes established using this algorithm is not uniform. The words with higher frequencies are classified into smaller word classes, and words with lower frequencies are classified into larger ones. In this way, the amount of computation is reduced further.
-
-#### 2.3. Algorithm 3
-This algorithm is almost same as the previous one, The only difference is that square probability is used to  the sum of the square probability of all words is:
+This algorithm is optimized further by clustering words using sqrt frequency:
 
 $$dF = \sum_{i=1}^{V}\sqrt{\frac{f_i}{F}}$$
 
@@ -50,16 +53,19 @@ For the $$t$$th word, it will be classified into word class $$i$$ if its accumul
 
 $$\frac{i}{n}<\sum_{j=1}^{t}\frac{\sqrt{f_j/F}}{dF}\leq\frac{i+1}{n}$$
 
-With this algorithm, the difference among word classes is enlarged. The word classes of words with higher frequencies become smaller, and the ones of words with lower frequencies become bigger.
-
 #### 3. COMPARISON OF DIFFERENT ALGORITHM
-This speed-up technique can decrease the calculated amount of neural network language model, but it also casuses a bit of degradation in model's performance. In order to explore the advantages and disadvantages of above three algorithms for word class assignment, experiments are performed on hierarchical neural network language models with these algorithms. The experimental results are showed in Table 1:
+Theoretically, an exponential speed-up, on the order of $k/\textrm{log}_{2}k$, can be achieved with this hierarchical architecture. In [Morin and Bengio (2005)](http://www.gatsby.ucl.ac.uk/aistats/fullpapers/208.pdf), impressive speed-up during both training and test, which were less than the theoretical one, were obtained but an obvious increase in PPL was also observed. One possible explanation for this phenomenon is that the introduction of hierarchical architecture or word classes impose negative influence on the word classification by neural network language models. As is well known, a distribution representation for words, which can be used to represent the similarities between words, is formed by neural network language models during training. When words are clustered into classes, the similarities between words from different classes cannot be recognized directly. For a hierarchical clustering of words, words are clustered more finely which might lead to worse performance, i.e., higher perplexity, and deeper the hierarchical architecture is, worse the performance would be.
 
-Algorithm    | PPL    | Time/s
--------------|:------:|:-----:
-Uniform      | 253.23 |  1
-Algorithm 01 | 253.23 |  1
-Algorithm 02 | 73.2   |  2
-Algorithm 03 | 73.2   |  3
+To explore this point further, hierarchical LSTM-NNLMs with different number of hierarchical layers were built. In these hierarchical LSTM-NNLMs, words were clustered randomly and uniformly instead of according to any word similarity information. The results of experiment on these models are showed in Table 1 which strongly support the above hypothesis. When words are clustered into hierarchical word classes, the speed of both training and test increase, but the effect of speed-up decreases and the performance declines dramatically as the number of hierarchical layers increases. Lower perplexity can be expected if some similarity information of words is used when clustering words into classes. However, because of the ambiguity of words, the degradation of performance is unavoidable by assigning every word with a unique class or path. On the other hand, the similarities among words recognized by neural network is hard to defined, but it is sure that they are not confined to linguistical ones.
 
-#### 4. CONCLUSION
+<p style="text-align: center;">Table 1. Results for class-based models</p>
+
+Models    | $m$ | $n_h$ |  Method   | $l$ |  PPL   | Train(words/s) | Test(words/s)
+----------|:---:|:-----:|:---------:|:---:|:------:|:--------------:|:-------------:
+LSTM-NNLM | 200 |  200  |  Uniform  |  1  | 227.51 |      607.09    |     2798.97
+LSTM-NNLM | 15  |  200  |  Uniform  |  3  | 312.82 |      683.04    |     3704.28
+LSTM-NNLM |  6  |  200  |  Uniform  |  5  | 438.58 |      694.43    |     3520.27
+LSTM-NNLM | 200 |  200  |   Freq    |  1  | 248.99 |      600.56    |     2507.97
+LSTM-NNLM | 200 |  200  | Sqrt-Freq |  1  | 237.93 |      650.16    |     3057.27
+
+The experiment results (Table 1) indicate that higher perplexity and a little more training time were obtained when the words in vocabulary were classified according to their frequencies than classified randomly and uniformly. When words are clustered into word classed using their frequency, words with high frequency, which contribute more to final perplexity, are clustered into very small word classes, and this leads to higher perplexity. On the other hand, word classes consist of words with low frequency are much bigger which causes more training time. However, as the experiment results show, both perplexity and training time were improved when words were classified according to their sqrt frequency, because word classes were more uniform when built in this way. All other models in this paper were speeded up using word classes, and words were clustered according to their sqrt frequencies.

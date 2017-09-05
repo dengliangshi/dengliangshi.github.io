@@ -162,10 +162,10 @@ Comparision among different neural network language models have already been mad
 
 Models | $$n$$ | $$m$$ | $$n_h$$ | Direct | Bias | Brown  
 :-----:|:-----:|:-----:|:-------:|:------:|:----:|:------:
-FNNLM  |   5   |  100  |   200   |   No   |  No  | 223.85 
-RNNLM  |   -   |  100  |   200   |   No   |  No  | 221.10 
-LSTMLM |   -   |  100  |   200   |   No   |  No  | 237.93 
-LSTMLM |   -   |  100  |   200   |   Yes  |  No  | 242.54 
-LSTMLM |   -   |  100  |   200   |   No   |  Yes | 237.18 
+FNNLM  |   5   |  200  |   200   |   No   |  No  | 223.85 
+RNNLM  |   -   |  200  |   200   |   No   |  No  | 221.10 
+LSTMLM |   -   |  200  |   200   |   No   |  No  | 237.93 
+LSTMLM |   -   |  200  |   200   |   Yes  |  No  | 242.54 
+LSTMLM |   -   |  200  |   200   |   No   |  Yes | 237.18 
 
 The experiment results are showed in Table 1 which suggest that, on a small corpus likes Brown Corpus, RNNLM and LSTM-RNN did not show a remarkable advantage over FNNLM, instead a bit higher perplexity was achieved by LSTM-RNNLM. Maybe more data is needed to train RNNLM and LSTM-RNN because more previous context are taken into account by RNNLM and LSTM-RNNLM when predicting next word. LSTM-RNNLM with bias terms or direct connections was also evaluated. With direct connections, a slightly higher perpleixty but shorter training time was obtained. An explanation given by [Bengio et al. (2003)](http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf) is that direct connections provide a bit more capacity and faster learning of the "linear" part of mapping from inputs to outputs but impose a negative effect on generalization. For the bias terms, no significant improvement of performance was gained which was also observed on RNNLM by [Mikolov, 2012](http://www.fit.vutbr.cz/~imikolov/rnnlm/thesis.pdf).
